@@ -72,8 +72,6 @@ def download(urls, output_name, logger):
             text = ''.join(text)
             text = text.replace('\u3000\u3000', '\n')
             f.write(text.strip())
-        print("BREAK")
-        break
     f.close()
 
 def send(logger, which, paras):
