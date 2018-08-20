@@ -22,7 +22,7 @@ def request(url, logger):
     logger.info(info)
     try:
         respond = requests.get(url, headers=header, timeout=5)
-    except requests.exceptions.Timeout:
+    except:
         info = 'N Timeout And Retry Url Is ' + url
         logger.warning(info)
         for i in range(1, 20):
@@ -156,14 +156,10 @@ def run(targets, logger, paras, nu):
         else:
             new = False
         status = None
-        try:
-            logger.info('get catalogue')
-            get_catalogue(targets, logger)
-            logger.info('update and download')
-            status = update(targets, logger, paras)
-        except:
-            logger.error('Error In Action')
-            continue
+        logger.info('get catalogue')
+        get_catalogue(targets, logger)
+        logger.info('update and download')
+        status = update(targets, logger, paras)
         logger.info('Action End')
 
         if status is None:
@@ -221,7 +217,4 @@ if __name__ == '__main__':
     logger.setLevel(logging.INFO)
     
     # start running
-    try:
-        run(targets, logger, paras, nu)
-    except:
-        logger.error('Error In Position 0')
+    run(targets, logger, paras, nu)
