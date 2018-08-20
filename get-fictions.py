@@ -3,6 +3,7 @@ import ast
 import sys
 import time
 import logging
+import logging.handlers
 import requests
 
 from lxml import etree
@@ -211,13 +212,14 @@ if __name__ == '__main__':
     # log
     logger = logging.getLogger("Fiction")
     formatter = logging.Formatter('%(asctime)s %(levelname)-8s: %(message)s')
-    file_handler = logging.FileHandler(os.path.join(sys.path[0], "fiction.log"))
+    file_handler = logging.handlers.TimedRotatingFileHandler(os.path.join(sys.path[0], "fiction-log-"), when='H', interval=2, backupCount=10)
     file_handler.setFormatter(formatter)
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.formatter = formatter
     logger.addHandler(file_handler)
     logger.addHandler(console_handler)
     logger.setLevel(logging.INFO)
+    
     # start running
     try:
         run(targets, logger, paras, nu)
