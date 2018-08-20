@@ -4,6 +4,7 @@
 
 使用需要配置ficiton.conf，可部署到vps。
 
+已有的小说【剑来】、【牧神记】（好看O_#），可自行添加；
 
 windows10, python3.65: test passed
 
