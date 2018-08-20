@@ -6,5 +6,7 @@
 
 
 windows10, python3.65: test passed
+
 centos, python3.55: test passed
+
 manjaro, python3.70: test failed
