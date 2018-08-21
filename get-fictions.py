@@ -14,12 +14,17 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 
-header = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134'}
+header = {
+    'Connection': 'close',
+    'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134'}
 
-def request(url, logger):
+def _request(url, logger):
     sleep_time = 0.1
     info = '_ Requesting For ' + url
     logger.info(info)
+    requests.adapters.DEFAULT_RETRIES = 20
+    s = requests.session()
+    s.keep_alive = False
     try:
         respond = requests.get(url, headers=header, timeout=5)
     except:
@@ -29,7 +34,7 @@ def request(url, logger):
             try:
                 respond = requests.get(url, headers=header, timeout=5)
             except requests.exceptions.Timeout:
-                info = 'N Timeout For ' + url + 'Wait For %ss Please!' % sleep_time
+                info = 'N Timeout For ' + url + ' Waiting For %ss Please!' % sleep_time
                 logger.warning(info)
                 time.sleep(sleep_time)
                 sleep_time *= 2
@@ -41,6 +46,22 @@ def request(url, logger):
     logger.info('Y ' + url)
     return respond
 
+def request(url, logger):
+    times = 0
+    sleep_time = 60
+    while True:
+        times += 1
+        if times == 100:
+            break
+        try:
+            r = _request(url, logger)
+            return r
+        except:
+            logger.error('Big Error! Can not request, Sleep %ss' % sleep_time)
+            time.sleep(sleep_time)
+            sleep_time += 60
+    return None
+    
 def download(urls, output_name, logger):
     f = open(output_name, 'w')
     for url in urls:
